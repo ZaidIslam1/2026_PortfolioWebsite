@@ -26,6 +26,36 @@ app.get("/", (req, res) =>
 );
 app.get("/health", (req, res) => res.status(200).send("ok"));
 
+app.get("/debug/diag", (req, res) => {
+  const run = (cmd) => {
+    try {
+      return execSync(cmd, {
+        encoding: "utf-8",
+        timeout: 15000,
+        stdio: ["ignore", "pipe", "pipe"],
+      });
+    } catch (e) {
+      return `ERROR: ${e.message}\nSTDOUT:\n${e.stdout?.toString?.() || ""}\nSTDERR:\n${e.stderr?.toString?.() || ""}`;
+    }
+  };
+
+  res.json({
+    cwd: process.cwd(),
+    __dirname,
+    gridBinary,
+    mapPath,
+    gridBinaryExists: fs.existsSync(gridBinary),
+    gridBinaryFile: run(`file "${gridBinary}"`), // tells us if it’s Linux or Mac binary
+    gridBinaryPerms: fs.existsSync(gridBinary)
+      ? fs.statSync(gridBinary).mode.toString(8)
+      : null,
+    mapBmpExists: fs.existsSync(path.join(mapPath, "map.bmp")),
+    runGridserverGrid: run(
+      `cd "${mapPath}" && "${gridBinary}" grid | head -c 2000`,
+    ), // show first 2000 chars
+  });
+});
+
 app.get("/debug", (req, res) => {
   res.json({
     cwd: process.cwd(),
@@ -57,10 +87,9 @@ function getGridData() {
     if (!fs.existsSync(mapPath)) {
       throw new Error(`mapPath not found at: ${mapPath}`);
     }
-
     const output = execSync(`cd "${mapPath}" && "${gridBinary}" grid`, {
       encoding: "utf-8",
-      timeout: 15000,
+      timeout: 20000,
       stdio: ["ignore", "pipe", "pipe"],
     });
 
@@ -72,17 +101,12 @@ function getGridData() {
     gridCache = data;
     return gridCache;
   } catch (err) {
-    const stdout = err?.stdout?.toString?.() || "";
-    const stderr = err?.stderr?.toString?.() || "";
-
     console.error("Error loading grid:", err.message);
-    if (stdout) console.error("stdout:", stdout);
-    if (stderr) console.error("stderr:", stderr);
-
+    if (err?.stdout) console.error("stdout:", err.stdout.toString());
+    if (err?.stderr) console.error("stderr:", err.stderr.toString());
     return null;
   }
 }
-
 // API endpoint to get grid map
 app.get("/api/grid", (req, res) => {
   const grid = getGridData();
