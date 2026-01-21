@@ -6,9 +6,18 @@ import { fileURLToPath } from "url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 
-app.use(cors());
+app.use(
+  cors({
+    origin: [
+      process.env.CLIENT_URL,          // set this on Render
+      "http://localhost:3000",
+      "http://localhost:5173",
+    ].filter(Boolean),
+  })
+);
+
 app.use(express.json());
 
 const gridBinary = path.join(__dirname, "../cpp_folder/gridserver");

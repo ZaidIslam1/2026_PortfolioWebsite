@@ -12,7 +12,8 @@
     "nodemon": "^3.0.0"
   },
   "scripts": {
-    "start": "node server.js",
-    "dev": "nodemon server.js"
+    "dev": "nodemon server.js",
+    "build": "chmod +x ./build_gridserver.sh && ./build_gridserver.sh",
+    "start": "node server.js"
   }
 }
