@@ -49,7 +49,7 @@ export default function About() {
                   MongoDB databases.
                 </p>
                 <p className="text-dark-300 text-lg leading-relaxed">
-                  With a portfolio of 4 production-ready applications—including
+                  With a portfolio of 4 production-ready applications including
                   Z (social media platform), Spotify Clone (music
                   streaming), E-Commerce Store (payment processing), and Grid
                   Pathfinding (algorithm visualization) I want to showcase my
