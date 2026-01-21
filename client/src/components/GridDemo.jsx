@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 
+const API = import.meta.env.VITE_API_URL || "http://localhost:3001";
+
 const TILE_BLOCKED = 0;
 const TILE_GROUND = 1;
 const TILE_WATER = 2;
@@ -30,7 +32,7 @@ export default function GridDemo() {
 
     const fetchGrid = async () => {
       try {
-        const res = await fetch("http://localhost:3001/api/grid");
+        const res = await fetch(`${API}/api/grid`);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
         if (data && data.tiles && data.width && data.height) {
@@ -196,7 +198,7 @@ export default function GridDemo() {
       const [x0, y0] = mouseDown;
 
       if (mode === "pathfind") {
-        fetch("http://localhost:3001/api/grid/findpath", {
+        fetch(`${API}/api/grid/findpath`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -215,7 +217,7 @@ export default function GridDemo() {
           })
           .catch((err) => console.error("Pathfind error:", err));
       } else if (mode === "connected") {
-        fetch("http://localhost:3001/api/grid/isconnected", {
+        fetch(`${API}/api/grid/isconnected`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
