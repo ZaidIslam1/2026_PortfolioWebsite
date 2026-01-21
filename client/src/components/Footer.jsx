@@ -18,13 +18,13 @@ export default function Footer() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center flex-wrap">
             <a
-              href="mailto:your-email@example.com"
+              href="mailto:izaid0630@gmail.com"
               className="px-8 py-3 bg-gradient-to-r from-primary to-secondary text-white rounded-lg font-semibold hover:shadow-lg hover:shadow-primary/50 transition-all duration-200"
             >
               Email Me
             </a>
             <a
-              href="https://github.com"
+              href="https://github.com/ZaidIslam1"
               target="_blank"
               rel="noopener noreferrer"
               className="px-8 py-3 border-2 border-primary text-primary rounded-lg font-semibold hover:bg-primary hover:text-white transition-all duration-200"
@@ -32,7 +32,7 @@ export default function Footer() {
               GitHub
             </a>
             <a
-              href="https://linkedin.com"
+              href="https://linkedin.com/in/zaid-islam-64a374216"
               target="_blank"
               rel="noopener noreferrer"
               className="px-8 py-3 border-2 border-secondary text-secondary rounded-lg font-semibold hover:bg-secondary hover:text-white transition-all duration-200"
