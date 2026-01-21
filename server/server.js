@@ -9,13 +9,25 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+const allowed = [
+  process.env.CLIENT_URL,
+  "http://localhost:3000",
+  "http://localhost:5173",
+].filter(Boolean);
+
 app.use(
   cors({
-    origin: [
-      process.env.CLIENT_URL, // set this on Render
-      "http://localhost:3000",
-      "http://localhost:5173",
-    ].filter(Boolean),
+    origin: (origin, cb) => {
+      // allow server-to-server / curl (no origin)
+      if (!origin) return cb(null, true);
+
+      if (allowed.includes(origin)) return cb(null, true);
+
+      // allow any vercel preview for your project
+      if (origin.endsWith(".vercel.app")) return cb(null, true);
+
+      return cb(new Error("Not allowed by CORS"), false);
+    },
   }),
 );
 
