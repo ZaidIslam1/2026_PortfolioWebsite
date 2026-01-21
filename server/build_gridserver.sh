@@ -2,17 +2,24 @@
 set -e
 
 echo "Building gridserver..."
-
-# Go to repo root (server/ is the workdir on Render)
 cd ..
 
-# Clean + build using the makefile inside cpp_folder
-make -C cpp_folder clean || true
+# show tools (helps in Render logs)
+which g++ || true
+g++ --version || true
+which make || true
+make --version || true
+
+# build
 make -C cpp_folder
 
-# Ensure output is named exactly "gridserver"
-# If your makefile outputs something else, rename it here.
-chmod +x cpp_folder/gridserver
+# IMPORTANT: ensure the output is named gridserver
+if [ ! -f cpp_folder/gridserver ]; then
+  echo "ERROR: cpp_folder/gridserver was not created by make"
+  echo "Files in cpp_folder:"
+  ls -la cpp_folder
+  exit 1
+fi
 
-echo "gridserver built at cpp_folder/gridserver"
-echo "Build complete."
+chmod +x cpp_folder/gridserver
+echo "gridserver built OK"
