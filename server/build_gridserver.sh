@@ -1,38 +1,20 @@
 #!/usr/bin/env bash
 set -e
 
-echo "Building gridserver..."
+echo "Building gridserver (headless)..."
 cd ..
 
-echo "== Toolchain =="
-which make || true
-make --version || true
-which g++ || true
-g++ --version || true
-
-echo "== Build =="
-make -C cpp_folder clean || true
-make -C cpp_folder
-
-echo "== Verify output =="
-if [ ! -f cpp_folder/gridserver ]; then
-  echo "ERROR: cpp_folder/gridserver was not created."
-  echo "Contents of cpp_folder:"
-  ls -la cpp_folder
-  exit 1
-fi
+# Compile ONLY the server (no OpenGL)
+g++ -O3 -std=c++17 \
+  cpp_folder/GridServer.cpp cpp_folder/Grid.cpp \
+  -o cpp_folder/gridserver
 
 chmod +x cpp_folder/gridserver
 
-# Print what the binary actually is (Linux should say ELF)
 echo "Binary type:"
 file cpp_folder/gridserver || true
 
-echo "== Smoke test =="
-# Try to run it (won't crash the build if it errors, but will show output in logs)
-set +e
-(cd cpp_folder && ./gridserver grid | head -c 400)
+echo "Smoke test:"
+(cd cpp_folder && ./gridserver grid | head -c 200)
 echo
-set -e
-
 echo "Build complete."
